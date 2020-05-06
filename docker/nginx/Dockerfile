@@ -1,0 +1,1 @@
+FROM devilbox/nginx-stable

@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  php-fpm:
+    build:
+      context: ./php-fpm
+    volumes:
+      - ../src:/var/www/default/htdocs
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ../src:/var/www/default/htdocs
+    depends_on:
+      - php-fpm
+    links:
+      - php-fpm
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - PHP_FPM_ENABLE=1
+      - PHP_FPM_SERVER_ADDR=php-fpm
+  mysql:
+    build:
+      context: ./mysql
+    environment:
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=docker
+    ports:
+      - "3306:3306"
